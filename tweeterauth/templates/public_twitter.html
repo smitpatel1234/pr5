@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Twitter Profile - {{ profile.username }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f8fa;
+            color: #14171a;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 700px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .profile {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #e1e8ed;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .profile img {
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .profile h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+        .profile p {
+            margin: 4px 0;
+            color: #657786;
+        }
+        .metrics {
+            font-size: 14px;
+            color: #657786;
+        }
+        h3 {
+            margin-top: 0;
+        }
+        .tweet {
+            border-bottom: 1px solid #e1e8ed;
+            padding: 10px 0;
+        }
+        .tweet:last-child {
+            border-bottom: none;
+        }
+        .tweet small {
+            color: #657786;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile">
+            <img src="{{ profile.profile_image_url }}" alt="Profile picture" width="80" height="80">
+            <div>
+                <h2>{{ profile.name }} <span style="color:#657786;">@{{ profile.username }}</span></h2>
+                <p>{{ profile.description }}</p>
+                <p class="metrics">
+                    Followers: {{ profile.public_metrics.followers_count }} |
+                    Following: {{ profile.public_metrics.following_count }} |
+                    Tweets: {{ profile.public_metrics.tweet_count }}
+                </p>
+            </div>
+        </div>
+
+        <h3>Recent Tweets</h3>
+        {% if tweets %}
+            {% for tweet in tweets %}
+                <div class="tweet">
+                    <p>{{ tweet.text }}</p>
+                    <small>{{ tweet.created_at }} | ❤️ {{ tweet.public_metrics.like_count }} | 🔁 {{ tweet.public_metrics.retweet_count }}</small>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No tweets available.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
