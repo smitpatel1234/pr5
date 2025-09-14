@@ -33,6 +33,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
 
     "pr5-06nx.onrender.com",
+    '127.0.0.1',
 ]
 
 
