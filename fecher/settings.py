@@ -15,6 +15,11 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+import os
+
+TWITTER_API_KEY = os.getenv("J1axICpx4RWVTiKDB1KkTCF6j")
+TWITTER_API_SECRET = os.getenv("aIUHVs0X8i9bxBidsyb6DYmDAE9HOSLABwp0aDWRXoy1UimTjd")
+TWITTER_CALLBACK_URL = "http://127.0.0.1:8000/twitter/callback/"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -82,7 +87,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

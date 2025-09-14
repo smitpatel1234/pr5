@@ -7,6 +7,11 @@
 </head>
 <body>
     <h1>Hii Smit Patel</h1>
+<h2>Twitter Profile</h2>
+<p>Name: {{ user.name }}</p>
+<p>Username: @{{ user.screen_name }}</p>
+<p>Followers: {{ user.followers_count }}</p>
+<img src="{{ user.profile_image_url_https }}" alt="Profile Pic">
 
 </body>
 </html>
