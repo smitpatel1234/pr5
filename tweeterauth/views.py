@@ -1,7 +1,11 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
-from django.conf import settings
+from django.shortcuts import render
+
+# Create your views here.
 import tweepy
+from django.conf import settings
+from django.shortcuts import redirect, render
+from django.http import HttpResponse,JsonResponse
+
 from asgiref.sync import sync_to_async
 
 
@@ -57,30 +61,28 @@ async def twitter_profile_api(request, username):
         return JsonResponse({"error": str(e)}, status=500)
 
 
-# ---------- LOGIN ----------
-async def twitter_login(request):
+def twitter_login(request):
     auth = tweepy.OAuth1UserHandler(
         settings.TWITTER_API_KEY,
         settings.TWITTER_API_SECRET,
         settings.TWITTER_CALLBACK_URL
     )
     try:
-        # Run Tweepy call safely
-        redirect_url = await sync_to_async(auth.get_authorization_url)()
+        redirect_url =  auth.get_authorization_url()
         request.session['request_token'] = auth.request_token
         return redirect(redirect_url)
     except Exception as e:
         return HttpResponse(f"Error: {e}")
 
-
-# ---------- CALLBACK ----------
 def twitter_callback(request):
     oauth_verifier = request.GET.get("oauth_verifier")
 
     if not oauth_verifier:
         return HttpResponse("❌ Missing oauth_verifier. Login again.")
 
+    # Retrieve request token from session
     request_token = request.session.get("request_token")
+
     if not request_token:
         return HttpResponse("❌ Missing request_token. Please restart login.")
 
@@ -88,10 +90,14 @@ def twitter_callback(request):
         settings.TWITTER_API_KEY,
         settings.TWITTER_API_SECRET,
     )
+
+    # Must reassign stored request_token
     auth.request_token = request_token
 
     try:
         access_token, access_token_secret = auth.get_access_token(oauth_verifier)
+
+        # Save final tokens (for API usage later)
         request.session["access_token"] = access_token
         request.session["access_token_secret"] = access_token_secret
 
@@ -101,3 +107,4 @@ def twitter_callback(request):
         return render(request, "twitter_profile.html", {"user": user._json})
     except Exception as e:
         return HttpResponse(f"Callback error: {e}")
+
