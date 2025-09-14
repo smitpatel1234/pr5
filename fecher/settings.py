@@ -31,8 +31,7 @@ SECRET_KEY = 'django-insecure-nns+=^ds3f9pp^jt)s5ra34wwv7p$q)ihuzuehh#@r3t%4()of
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "localhost",
-    "127.0.0.1",
+
     "pr5-06nx.onrender.com",
 ]
 
