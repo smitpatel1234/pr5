@@ -4,7 +4,60 @@ from django.shortcuts import render
 import tweepy
 from django.conf import settings
 from django.shortcuts import redirect, render
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
+
+
+# Setup Twitter client (Bearer Token from settings.py)
+client = tweepy.Client(bearer_token=settings.TWITTER_BEARER_TOKEN)
+
+def twitter_profile_api(request, username):
+    try:
+        # Get user profile
+        user = client.get_user(
+            username=username,
+            user_fields=["profile_image_url", "public_metrics", "description", "created_at"]
+        )
+
+        if not user.data:
+            return JsonResponse({"error": "User not found"}, status=404)
+
+        profile = {
+            "id": user.data.id,
+            "username": user.data.username,
+            "name": user.data.name,
+            "description": user.data.description,
+            "profile_image_url": user.data.profile_image_url,
+            "public_metrics": user.data.public_metrics,
+            "created_at": user.data.created_at
+        }
+
+        # Get recent tweets (limit 5)
+        tweets_data = client.get_users_tweets(
+            id=user.data.id,
+            tweet_fields=["created_at", "public_metrics"],
+            max_results=5
+        )
+
+        tweets = []
+        if tweets_data.data:
+            for t in tweets_data.data:
+                tweets.append({
+                    "id": t.id,
+                    "text": t.text,
+                    "created_at": t.created_at,
+                    "public_metrics": t.public_metrics
+                })
+
+        # Return API response
+        if request.headers.get("Accept") == "application/json":
+            return JsonResponse({"profile": profile, "tweets": tweets})
+
+        # Otherwise render template
+        return render(request, "public_twitter.html", {"profile": profile, "tweets": tweets})
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
 
 def twitter_login(request):
     auth = tweepy.OAuth1UserHandler(
