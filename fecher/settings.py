@@ -19,7 +19,7 @@ import os
 
 TWITTER_API_KEY= "J1axICpx4RWVTiKDB1KkTCF6j"
 TWITTER_API_SECRET = "aIUHVs0X8i9bxBidsyb6DYmDAE9HOSLABwp0aDWRXoy1UimTjd"
-TWITTER_CALLBACK_URL = "http://pr5-06nx.onrender.com/twitter/callback/"
+TWITTER_CALLBACK_URL = "https://pr5-06nx.onrender.com/twitter/callback/"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
